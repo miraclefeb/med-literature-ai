@@ -64,7 +64,7 @@ def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
         if not pmids:
             return []
         
-        # 第二步：获取文献摘要
+        # 第二步：获取文献基本信息
         summary_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
         summary_params = {
             "db": "pubmed",
@@ -74,6 +74,35 @@ def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
         
         summary_response = requests.get(summary_url, params=summary_params, timeout=15)
         summary_data = summary_response.json()
+        
+        # 第三步：获取完整摘要（使用 efetch）
+        fetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        fetch_params = {
+            "db": "pubmed",
+            "id": ",".join(pmids),
+            "retmode": "xml",
+            "rettype": "abstract"
+        }
+        
+        fetch_response = requests.get(fetch_url, params=fetch_params, timeout=20)
+        
+        # 解析 XML 获取摘要
+        import xml.etree.ElementTree as ET
+        abstracts = {}
+        try:
+            root = ET.fromstring(fetch_response.content)
+            for article in root.findall(".//PubmedArticle"):
+                pmid_elem = article.find(".//PMID")
+                abstract_elem = article.find(".//AbstractText")
+                if pmid_elem is not None and abstract_elem is not None:
+                    pmid = pmid_elem.text
+                    abstract = abstract_elem.text or ""
+                    # 截取前150字
+                    if len(abstract) > 150:
+                        abstract = abstract[:150] + "..."
+                    abstracts[pmid] = abstract
+        except:
+            pass  # 如果解析失败，继续使用空摘要
         
         # 解析结果
         articles = []
@@ -93,6 +122,7 @@ def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
                     "authors": author_names,
                     "journal": article_data.get("fulljournalname", ""),
                     "year": article_data.get("pubdate", "").split()[0] if article_data.get("pubdate") else "",
+                    "abstract": abstracts.get(pmid, "暂无摘要"),
                     "link": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
                 })
         
@@ -216,6 +246,7 @@ if st.button("🚀 开始检索", type="primary", use_container_width=True):
                     with col1:
                         st.markdown(f"**作者：** {article['authors']}")
                         st.markdown(f"**期刊：** {article['journal']} ({article['year']})")
+                        st.markdown(f"**摘要：** {article['abstract']}")
                     
                     with col2:
                         st.markdown(f"**PMID:** {article['pmid']}")
