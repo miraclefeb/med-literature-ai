@@ -231,26 +231,30 @@ if st.button("🚀 开始检索", type="primary", use_container_width=True):
             with st.spinner("🤖 AI 正在分析文献并生成总结..."):
                 summary = summarize_with_ai(query, articles, api_key)
             
-            # 显示总结
-            st.markdown("## 📊 核心结论")
-            st.markdown(summary)
+            # 左右布局显示结果
+            col_left, col_right = st.columns([2, 3])
             
-            # 显示文献列表
-            st.markdown("---")
-            st.markdown("## 📚 相关文献")
+            # 左侧：核心结论
+            with col_left:
+                st.markdown("## 📊 核心结论")
+                st.markdown(summary)
             
-            for i, article in enumerate(articles, 1):
-                with st.expander(f"📄 {i}. {article['title']}", expanded=(i <= 3)):
-                    col1, col2 = st.columns([3, 1])
+            # 右侧：文献列表
+            with col_right:
+                st.markdown("## 📚 相关文献")
+                
+                for i, article in enumerate(articles, 1):
+                    with st.expander(f"📄 {i}. {article['title']}", expanded=(i <= 3)):
+                        col1, col2 = st.columns([3, 1])
                     
-                    with col1:
-                        st.markdown(f"**作者：** {article['authors']}")
-                        st.markdown(f"**期刊：** {article['journal']} ({article['year']})")
-                        st.markdown(f"**摘要：** {article['abstract']}")
+                        with col1:
+                            st.markdown(f"**作者：** {article['authors']}")
+                            st.markdown(f"**期刊：** {article['journal']} ({article['year']})")
+                            st.markdown(f"**摘要：** {article['abstract']}")
                     
-                    with col2:
-                        st.markdown(f"**PMID:** {article['pmid']}")
-                        st.markdown(f"[📖 查看原文]({article['link']})")
+                        with col2:
+                            st.markdown(f"**PMID:** {article['pmid']}")
+                            st.markdown(f"[📖 查看原文]({article['link']})")
 
 # 页脚
 st.markdown("---")
