@@ -105,11 +105,14 @@ def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
 # AI 总结函数
 def summarize_with_ai(query: str, articles: List[Dict], api_key: str) -> str:
     """使用 DeepSeek AI 总结文献"""
+    if not articles:
+        return "未找到相关文献"
+    
     try:
         # 构建 prompt
         articles_text = "\n\n".join([
             f"文献 {i+1}:\n标题: {article['title']}\n作者: {article['authors']}\n期刊: {article['journal']} ({article['year']})\nPMID: {article['pmid']}"
-            for i, article in enumerate(articles[:8])  # 使用前8篇
+            for i, article in enumerate(articles[:8])
         ])
         
         prompt = f"""你是一个专业的医学文献分析助手。
@@ -128,7 +131,7 @@ def summarize_with_ai(query: str, articles: List[Dict], api_key: str) -> str:
 请用专业但易懂的语言回答，分点说明。"""
 
         # 调用 DeepSeek API
-response = requests.post(
+        response = requests.post(
             "https://api.deepseek.com/v1/chat/completions",
             headers={
                 "Authorization": f"Bearer {api_key}",
@@ -150,8 +153,12 @@ response = requests.post(
             result = response.json()
             return result["choices"][0]["message"]["content"]
         else:
-            return f"❌ AI 总结失败：{response.status_code}\n{response.text[:200]}"
-    
+            return f"❌ AI 总结失败：HTTP {response.status_code}"
+            
+    except requests.exceptions.Timeout:
+        return "❌ AI 请求超时，请重试"
+    except requests.exceptions.RequestException as e:
+        return f"❌ 网络请求失败：{str(e)}"
     except Exception as e:
         return f"❌ AI 总结出错：{str(e)}"
 
