@@ -8,6 +8,7 @@ import requests
 import json
 from typing import List, Dict
 import os
+import time
 
 # 页面配置
 st.set_page_config(
@@ -92,7 +93,6 @@ def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
                     "authors": author_names,
                     "journal": article_data.get("fulljournalname", ""),
                     "year": article_data.get("pubdate", "").split()[0] if article_data.get("pubdate") else "",
-                    "abstract": "暂无摘要",  # esummary 不返回摘要，需要用 efetch
                     "link": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
                 })
         
@@ -102,20 +102,19 @@ def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
         st.error(f"PubMed 检索出错：{str(e)}")
         return []
 
-# AI 总结函数
+# AI 总结函数（带重试机制）
 def summarize_with_ai(query: str, articles: List[Dict], api_key: str) -> str:
     """使用 DeepSeek AI 总结文献"""
     if not articles:
         return "未找到相关文献"
     
-    try:
-        # 构建 prompt
-        articles_text = "\n\n".join([
-            f"文献 {i+1}:\n标题: {article['title']}\n作者: {article['authors']}\n期刊: {article['journal']} ({article['year']})\nPMID: {article['pmid']}"
-            for i, article in enumerate(articles[:8])
-        ])
-        
-        prompt = f"""你是一个专业的医学文献分析助手。
+    # 构建 prompt
+    articles_text = "\n\n".join([
+        f"文献 {i+1}:\n标题: {article['title']}\n作者: {article['authors']}\n期刊: {article['journal']} ({article['year']})"
+        for i, article in enumerate(articles[:8])
+    ])
+    
+    prompt = f"""你是一个专业的医学文献分析助手。
 
 用户问题：{query}
 
@@ -130,37 +129,52 @@ def summarize_with_ai(query: str, articles: List[Dict], api_key: str) -> str:
 
 请用专业但易懂的语言回答，分点说明。"""
 
-        # 调用 DeepSeek API
-        response = requests.post(
-            "https://api.deepseek.com/v1/chat/completions",
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            },
-            json={
-                "model": "deepseek-chat",
-                "messages": [
-                    {"role": "system", "content": "你是一个专业的医学文献分析助手，擅长总结医学研究并给出临床建议。"},
-                    {"role": "user", "content": prompt}
-                ],
-                "temperature": 0.7,
-                "max_tokens": 2000
-            },
-            timeout=30
-        )
-        
-        if response.status_code == 200:
-            result = response.json()
-            return result["choices"][0]["message"]["content"]
-        else:
-            return f"❌ AI 总结失败：HTTP {response.status_code}"
+    # 重试机制：最多尝试3次
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(
+                "https://api.deepseek.com/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "deepseek-chat",
+                    "messages": [
+                        {"role": "system", "content": "你是一个专业的医学文献分析助手，擅长总结医学研究并给出临床建议。"},
+                        {"role": "user", "content": prompt}
+                    ],
+                    "temperature": 0.7,
+                    "max_tokens": 2000
+                },
+                timeout=60  # 增加到60秒
+            )
             
-    except requests.exceptions.Timeout:
-        return "❌ AI 请求超时，请重试"
-    except requests.exceptions.RequestException as e:
-        return f"❌ 网络请求失败：{str(e)}"
-    except Exception as e:
-        return f"❌ AI 总结出错：{str(e)}"
+            if response.status_code == 200:
+                result = response.json()
+                return result["choices"][0]["message"]["content"]
+            else:
+                if attempt < max_retries - 1:
+                    time.sleep(2)  # 等待2秒后重试
+                    continue
+                return f"❌ AI 总结失败：HTTP {response.status_code}"
+                
+        except requests.exceptions.Timeout:
+            if attempt < max_retries - 1:
+                st.warning(f"⏱️ 请求超时，正在重试... ({attempt + 1}/{max_retries})")
+                time.sleep(2)
+                continue
+            return "❌ AI 请求超时，DeepSeek API 可能暂时不可用。请稍后重试。"
+        except requests.exceptions.RequestException as e:
+            if attempt < max_retries - 1:
+                time.sleep(2)
+                continue
+            return f"❌ 网络请求失败：{str(e)}"
+        except Exception as e:
+            return f"❌ AI 总结出错：{str(e)}"
+    
+    return "❌ 多次重试失败，请稍后再试"
 
 # 主界面
 query = st.text_input(
