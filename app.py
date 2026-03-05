@@ -294,6 +294,25 @@ query = st.text_area(
     height=120
 )
 
+
+# 示例问题
+st.markdown("### 💡 试试这些问题")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("2型糖尿病的一线用药", key="example1", use_container_width=True):
+        st.session_state.example_query = "2型糖尿病的一线用药是什么？"
+
+with col2:
+    if st.button("高血压治疗指南", key="example2", use_container_width=True):
+        st.session_state.example_query = "高血压的最新治疗指南"
+
+with col3:
+    if st.button("阿尔茨海默病研究进展", key="example3", use_container_width=True):
+        st.session_state.example_query = "阿尔茨海默病的最新研究进展"
+
+st.markdown("---")
+
 if st.button("🚀 开始检索", type="primary", use_container_width=True):
     if not query:
         st.warning("⚠️ 请输入问题")
