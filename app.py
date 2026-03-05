@@ -51,26 +51,26 @@ st.markdown("""
         background-color: #f7efe8;
     }
 
-    /* 滑块样式 - 优化配色 */
-    /* 滑块轨道（未走的进度）*/
-    .stSlider > div > div > div {
+        /* 滑块样式 */
+    /* 滑块轨道背景（整个条）- 米色 */
+    .stSlider [data-baseweb="slider"] > div > div {
         background-color: #f7efe8 !important;
     }
     
-    /* 滑块进度条（已走的进度）*/
-    .stSlider > div > div > div > div {
+    /* 滑块已选中部分 - 橙色 */
+    .stSlider [data-baseweb="slider"] > div > div > div {
         background-color: #fe791b !important;
     }
     
-    /* 滑块按钮 */
-    .stSlider > div > div > div > div > div {
+    /* 滑块圆点 - 橙色 */
+    .stSlider [data-baseweb="slider"] [role="slider"] {
         background-color: #fe791b !important;
     }
     
     /* 输入框去掉边框 */
     .stTextArea textarea {
         background-color: #f7efe8;
-        border: none;
+        border: 2px solid #FFFFFF;
         border-radius: 8px;
         padding: 12px;
     }
