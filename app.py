@@ -50,6 +50,29 @@ st.markdown("""
     .stTextArea textarea {
         background-color: #f7efe8;
     }
+
+    /* 滑块样式 */
+    .stSlider > div > div > div {
+        background-color: #f7efe8;
+    }
+    
+    .stSlider > div > div > div > div {
+        background-color: #fe791b;
+    }
+    
+    /* 输入框去掉边框 */
+    .stTextArea textarea {
+        background-color: #f7efe8;
+        border: none;
+        border-radius: 8px;
+        padding: 12px;
+    }
+    
+    .stTextArea textarea:focus {
+        border: none;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(254, 121, 27, 0.2);
+    }
 </style>
 """, unsafe_allow_html=True)
 
