@@ -370,7 +370,7 @@ if st.button("🚀 开始检索", type="primary", use_container_width=True):
                     
                         with col2:
                             st.markdown(f"**PMID:** {article['pmid']}")
-                            st.markdown(f"[📖 查看原文]({article['link']})")
+                            st.markdown(f"[📖 PubMed 原文]({article['link']})")
 
 # 页脚
 st.markdown("---")
