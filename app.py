@@ -22,177 +22,192 @@ st.title("📚 文献科研助手（PubMed版）")
 st.markdown('<p class="subtitle">快速检索医学文献，AI 智能总结核心结论</p>', unsafe_allow_html=True)
 
 
-# ChatGPT 风格样式
+# 现代渐变风格样式
 st.markdown("""
 <style>
-    /* 全局样式 - ChatGPT 风格 */
+    /* 全局样式 */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
     * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     
+    /* 主容器 - 渐变背景 */
     .main {
-        padding: 2rem 4rem;
-        background-color: #FFFFFF;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem 2rem;
     }
     
-    /* 标题 - ChatGPT 风格 */
+    /* 内容容器 */
+    .block-container {
+        max-width: 1200px;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* 标题 */
     h1 {
-        color: #202123;
-        font-size: 2rem;
-        font-weight: 600;
+        color: #1F2937;
+        font-size: 2.5rem;
+        font-weight: 700;
         margin-bottom: 0.5rem;
+        text-align: center;
         letter-spacing: -0.02em;
     }
     
     .subtitle {
-        color: #6E6E80;
-        font-size: 0.95rem;
-        margin-bottom: 2.5rem;
+        color: #6B7280;
+        font-size: 1.1rem;
+        text-align: center;
+        margin-bottom: 3rem;
         font-weight: 400;
     }
     
-    /* 输入框 - ChatGPT 风格 */
+    /* 输入框 */
     .stTextArea textarea {
         background-color: #FFFFFF;
-        border-radius: 12px;
-        border: 1px solid #D1D5DB;
-        padding: 14px 16px;
-        font-size: 0.95rem;
-        color: #202123;
-        line-height: 1.5;
-        transition: all 0.2s;
+        border-radius: 16px;
+        border: 2px solid #E5E7EB;
+        padding: 18px 20px;
+        font-size: 1rem;
+        color: #1F2937;
+        line-height: 1.6;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
     
     .stTextArea textarea:focus {
-        border-color: #10A37F;
-        box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
         outline: none;
     }
     
-    /* 按钮 - ChatGPT 绿色 */
+    /* 按钮 */
     .stButton button {
-        background-color: #10A37F;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        border-radius: 8px;
-        padding: 0.65rem 1.5rem;
-        font-size: 0.95rem;
-        font-weight: 500;
+        border-radius: 12px;
+        padding: 0.8rem 2.5rem;
+        font-size: 1.05rem;
+        font-weight: 600;
         border: none;
-        transition: all 0.2s;
-        letter-spacing: 0.01em;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        width: 100%;
     }
     
     .stButton button:hover {
-        background-color: #0E8C6C;
-        box-shadow: 0 2px 8px rgba(16, 163, 127, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
     }
     
-    /* 文献卡片 - ChatGPT 风格 */
+    /* 文献卡片 */
     .literature-card {
         background: #FFFFFF;
-        border-radius: 8px;
-        padding: 20px 24px;
-        margin-bottom: 16px;
-        border: 1px solid #E5E7EB;
-        transition: all 0.2s;
+        border-radius: 16px;
+        padding: 28px 32px;
+        margin-bottom: 20px;
+        border: 1px solid #F3F4F6;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s;
     }
     
     .literature-card:hover {
-        border-color: #D1D5DB;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        border-color: #667eea;
     }
     
     .literature-title {
-        color: #202123;
-        font-size: 1.05rem;
+        color: #1F2937;
+        font-size: 1.2rem;
         font-weight: 600;
         line-height: 1.5;
-        margin-bottom: 10px;
+        margin-bottom: 16px;
         letter-spacing: -0.01em;
     }
     
     .literature-meta {
-        color: #6E6E80;
-        font-size: 0.875rem;
-        line-height: 1.6;
-        margin-bottom: 14px;
+        color: #6B7280;
+        font-size: 0.9rem;
+        line-height: 1.8;
+        margin-bottom: 18px;
     }
     
     .literature-abstract {
-        color: #374151;
-        font-size: 0.9rem;
-        line-height: 1.65;
-        margin-bottom: 14px;
-        padding: 14px 16px;
+        color: #4B5563;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 18px;
+        padding: 16px 20px;
         background: #F9FAFB;
-        border-radius: 6px;
-        border-left: 3px solid #E5E7EB;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
     }
     
     .literature-link {
-        color: #10A37F;
+        color: #667eea;
         text-decoration: none;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: color 0.2s;
+        font-size: 0.95rem;
+        font-weight: 600;
+        transition: all 0.2s;
     }
     
     .literature-link:hover {
-        color: #0E8C6C;
+        color: #764ba2;
     }
     
-    /* 核心结论 - ChatGPT 风格 */
+    /* 核心结论 */
     .conclusion-box {
-        background: #F9FAFB;
-        border-radius: 8px;
-        padding: 20px 24px;
-        border: 1px solid #E5E7EB;
-        color: #374151;
-        line-height: 1.7;
+        background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+        border-radius: 16px;
+        padding: 28px 32px;
+        border: 1px solid #BAE6FD;
+        color: #1F2937;
+        line-height: 1.8;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
     
     /* 二级标题 */
     h2 {
-        color: #202123;
-        font-size: 1.25rem;
+        color: #1F2937;
+        font-size: 1.5rem;
         font-weight: 600;
-        margin-bottom: 1rem;
-        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+        margin-top: 2.5rem;
         letter-spacing: -0.01em;
     }
     
     /* 侧边栏 */
-    .css-1d391kg {
-        background-color: #F9FAFB;
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #F9FAFB 0%, #F3F4F6 100%);
     }
     
     /* 成功提示 */
     .stSuccess {
-        background-color: #D1FAE5;
+        background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
         color: #065F46;
-        border-radius: 8px;
-        padding: 12px 16px;
-        border-left: 3px solid #10A37F;
+        border-radius: 12px;
+        padding: 14px 20px;
+        border-left: 4px solid #10B981;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
     }
     
     /* 警告提示 */
     .stWarning {
-        background-color: #FEF3C7;
+        background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
         color: #92400E;
-        border-radius: 8px;
-        padding: 12px 16px;
-        border-left: 3px solid #F59E0B;
+        border-radius: 12px;
+        padding: 14px 20px;
+        border-left: 4px solid #F59E0B;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
     }
     
-    /* 错误提示 */
-    .stError {
-        background-color: #FEE2E2;
-        color: #991B1B;
-        border-radius: 8px;
-        padding: 12px 16px;
-        border-left: 3px solid #EF4444;
+    /* Spinner 加载动画 */
+    .stSpinner > div {
+        border-top-color: #667eea !important;
     }
 </style>
 """, unsafe_allow_html=True)
