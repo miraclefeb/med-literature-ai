@@ -287,12 +287,21 @@ def summarize_with_ai(query: str, articles: List[Dict], api_key: str) -> str:
     return "❌ 多次重试失败，请稍后再试"
 
 # 主界面
+# 获取示例问题的值
+default_value = st.session_state.example_query if 'example_query' in st.session_state and st.session_state.example_query else ""
+
 query = st.text_area(
     "🔍 输入您的医学问题",
+    value=default_value,
     placeholder="例如：2型糖尿病的一线用药是什么？\n\n也可以输入病例片段，AI会帮你找相关文献",
     help="用中文或英文描述您的问题",
-    height=120
+    height=120,
+    key="query_input"
 )
+
+# 清空 example_query，避免重复填充
+if 'example_query' in st.session_state and st.session_state.example_query:
+    st.session_state.example_query = ""
 
 
 # 示例问题
