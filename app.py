@@ -22,139 +22,177 @@ st.title("📚 文献科研助手（PubMed版）")
 st.markdown('<p class="subtitle">快速检索医学文献，AI 智能总结核心结论</p>', unsafe_allow_html=True)
 
 
-# 自定义样式
+# ChatGPT 风格样式
 st.markdown("""
 <style>
-    /* 全局字体和间距优化 */
-    .main {
-        padding: 2rem 3rem;
+    /* 全局样式 - ChatGPT 风格 */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     
-    /* 标题样式 */
+    .main {
+        padding: 2rem 4rem;
+        background-color: #FFFFFF;
+    }
+    
+    /* 标题 - ChatGPT 风格 */
     h1 {
-        color: #1565C0;
-        font-size: 2.2rem;
+        color: #202123;
+        font-size: 2rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
     }
     
-    /* 副标题 */
     .subtitle {
-        color: #546E7A;
-        font-size: 1rem;
-        margin-bottom: 2rem;
+        color: #6E6E80;
+        font-size: 0.95rem;
+        margin-bottom: 2.5rem;
+        font-weight: 400;
     }
     
-    /* 输入框样式 */
+    /* 输入框 - ChatGPT 风格 */
     .stTextArea textarea {
-        background-color: #FAFAFA;
-        border-radius: 8px;
-        border: 2px solid #E3F2FD;
-        padding: 12px;
-        font-size: 1rem;
+        background-color: #FFFFFF;
+        border-radius: 12px;
+        border: 1px solid #D1D5DB;
+        padding: 14px 16px;
+        font-size: 0.95rem;
+        color: #202123;
+        line-height: 1.5;
+        transition: all 0.2s;
     }
     
     .stTextArea textarea:focus {
-        border-color: #1E88E5;
-        box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.1);
+        border-color: #10A37F;
+        box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+        outline: none;
     }
     
-    /* 按钮样式 */
+    /* 按钮 - ChatGPT 绿色 */
     .stButton button {
-        background-color: #1E88E5;
+        background-color: #10A37F;
         color: white;
         border-radius: 8px;
-        padding: 0.6rem 2rem;
-        font-size: 1rem;
+        padding: 0.65rem 1.5rem;
+        font-size: 0.95rem;
         font-weight: 500;
         border: none;
-        transition: all 0.3s;
+        transition: all 0.2s;
+        letter-spacing: 0.01em;
     }
     
     .stButton button:hover {
-        background-color: #1565C0;
-        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+        background-color: #0E8C6C;
+        box-shadow: 0 2px 8px rgba(16, 163, 127, 0.25);
     }
     
-    /* 文献卡片样式 */
+    /* 文献卡片 - ChatGPT 风格 */
     .literature-card {
-        background: white;
-        border-radius: 12px;
-        padding: 24px;
-        margin-bottom: 20px;
-        border: 1px solid #E0E0E0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        transition: all 0.3s;
+        background: #FFFFFF;
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        border: 1px solid #E5E7EB;
+        transition: all 0.2s;
     }
     
     .literature-card:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        border-color: #1E88E5;
+        border-color: #D1D5DB;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
     
     .literature-title {
-        color: #1565C0;
-        font-size: 1.15rem;
+        color: #202123;
+        font-size: 1.05rem;
         font-weight: 600;
         line-height: 1.5;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
     }
     
     .literature-meta {
-        color: #757575;
-        font-size: 0.9rem;
-        line-height: 1.8;
-        margin-bottom: 16px;
+        color: #6E6E80;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        margin-bottom: 14px;
     }
     
     .literature-abstract {
-        color: #424242;
-        font-size: 0.95rem;
-        line-height: 1.7;
-        margin-bottom: 16px;
-        padding: 12px;
-        background: #F5F5F5;
+        color: #374151;
+        font-size: 0.9rem;
+        line-height: 1.65;
+        margin-bottom: 14px;
+        padding: 14px 16px;
+        background: #F9FAFB;
         border-radius: 6px;
+        border-left: 3px solid #E5E7EB;
     }
     
     .literature-link {
-        color: #1E88E5;
+        color: #10A37F;
         text-decoration: none;
-        font-size: 0.9rem;
+        font-size: 0.875rem;
         font-weight: 500;
+        transition: color 0.2s;
     }
     
     .literature-link:hover {
-        color: #1565C0;
-        text-decoration: underline;
+        color: #0E8C6C;
     }
     
-    /* 核心结论样式 */
+    /* 核心结论 - ChatGPT 风格 */
     .conclusion-box {
-        background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
-        border-radius: 12px;
-        padding: 24px;
-        border-left: 4px solid #1E88E5;
+        background: #F9FAFB;
+        border-radius: 8px;
+        padding: 20px 24px;
+        border: 1px solid #E5E7EB;
+        color: #374151;
+        line-height: 1.7;
     }
     
-    /* 侧边栏样式 */
+    /* 二级标题 */
+    h2 {
+        color: #202123;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        margin-top: 2rem;
+        letter-spacing: -0.01em;
+    }
+    
+    /* 侧边栏 */
     .css-1d391kg {
-        background-color: #FAFAFA;
+        background-color: #F9FAFB;
     }
     
-    /* 成功/警告提示优化 */
+    /* 成功提示 */
     .stSuccess {
-        background-color: #E8F5E9;
-        color: #2E7D32;
+        background-color: #D1FAE5;
+        color: #065F46;
         border-radius: 8px;
-        padding: 12px;
+        padding: 12px 16px;
+        border-left: 3px solid #10A37F;
     }
     
+    /* 警告提示 */
     .stWarning {
-        background-color: #FFF3E0;
-        color: #E65100;
+        background-color: #FEF3C7;
+        color: #92400E;
         border-radius: 8px;
-        padding: 12px;
+        padding: 12px 16px;
+        border-left: 3px solid #F59E0B;
+    }
+    
+    /* 错误提示 */
+    .stError {
+        background-color: #FEE2E2;
+        color: #991B1B;
+        border-radius: 8px;
+        padding: 12px 16px;
+        border-left: 3px solid #EF4444;
     }
 </style>
 """, unsafe_allow_html=True)
