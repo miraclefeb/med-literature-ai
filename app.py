@@ -127,10 +127,51 @@ with st.sidebar:
     4. 展示相关文献列表
     """)
 
+
+# 翻译函数
+def translate_to_english(text: str, api_key: str) -> str:
+    """将中文查询翻译成英文医学术语"""
+    try:
+        response = requests.post(
+            "https://api.deepseek.com/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "system", "content": "你是医学翻译专家。将用户的中文医学问题翻译成精确的英文医学术语，用于 PubMed 检索。只返回英文翻译，不要解释。"},
+                    {"role": "user", "content": f"翻译成英文医学术语：{text}"}
+                ],
+                "temperature": 0.3,
+                "max_tokens": 200
+            },
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            result = response.json()
+            english_query = result["choices"][0]["message"]["content"].strip()
+            return english_query
+        else:
+            return text
+    except:
+        return text
+
 # PubMed 检索函数
-def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
+def search_pubmed(query: str, max_results: int = 10, api_key: str = "") -> List[Dict]:
     """检索 PubMed 文献"""
     try:
+        # 如果是中文查询，先翻译成英文
+        if any('\u4e00' <= char <= '\u9fff' for char in query):
+            if api_key:
+                english_query = translate_to_english(query, api_key)
+                st.info(f"🔄 已将查询翻译为：{english_query}")
+                query = english_query
+            else:
+                st.warning("⚠️ 检测到中文查询，但未配置 API Key，可能无法获得最佳结果")
+
         # 第一步：搜索获取 PMID 列表
         search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
         search_params = {
@@ -341,7 +382,7 @@ if st.button("🚀 开始检索", type="primary", use_container_width=True):
         st.error("❌ 请在侧边栏配置 DeepSeek API Key")
     else:
         with st.spinner("🔎 正在检索 PubMed 文献..."):
-            articles = search_pubmed(query, max_results)
+            articles = search_pubmed(query, max_results, api_key)
         
         if not articles:
             st.warning("⚠️ 未找到相关文献，请尝试其他关键词")
