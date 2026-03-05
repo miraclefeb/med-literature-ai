@@ -18,8 +18,38 @@ st.set_page_config(
 )
 
 # 标题
-st.title("🔬 医学文献 AI 助手")
+st.title("📚 文献科研助手（PubMed版）")
 st.markdown("**快速检索医学文献，AI 智能总结核心结论**")
+
+
+# 自定义样式
+st.markdown("""
+<style>
+    /* 侧边栏背景色 */
+    section[data-testid="stSidebar"] {
+        background-color: #F5F5F5;
+    }
+    
+    /* 按钮颜色 - 浅橙色 */
+    .stButton button {
+        background-color: #FFB74D;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 2rem;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .stButton button:hover {
+        background-color: #FFA726;
+        box-shadow: 0 4px 12px rgba(255, 183, 77, 0.4);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 
 # 侧边栏配置
 with st.sidebar:
@@ -207,10 +237,11 @@ def summarize_with_ai(query: str, articles: List[Dict], api_key: str) -> str:
     return "❌ 多次重试失败，请稍后再试"
 
 # 主界面
-query = st.text_input(
+query = st.text_area(
     "🔍 输入您的医学问题",
-    placeholder="例如：2型糖尿病的一线用药是什么？",
-    help="用中文或英文描述您的问题"
+    placeholder="例如：2型糖尿病的一线用药是什么？\n\n也可以输入病例片段，AI会帮你找相关文献",
+    help="用中文或英文描述您的问题",
+    height=120
 )
 
 if st.button("🚀 开始检索", type="primary", use_container_width=True):
