@@ -91,18 +91,25 @@ def search_pubmed(query: str, max_results: int = 10) -> List[Dict]:
         abstracts = {}
         try:
             root = ET.fromstring(fetch_response.content)
-            for article in root.findall(".//PubmedArticle"):
-                pmid_elem = article.find(".//PMID")
-                abstract_elem = article.find(".//AbstractText")
-                if pmid_elem is not None and abstract_elem is not None:
+            for article_elem in root.findall(".//PubmedArticle"):
+                pmid_elem = article_elem.find(".//PMID")
+                if pmid_elem is not None:
                     pmid = pmid_elem.text
-                    abstract = abstract_elem.text or ""
-                    # 截取前150字
-                    if len(abstract) > 150:
-                        abstract = abstract[:150] + "..."
-                    abstracts[pmid] = abstract
-        except:
-            pass  # 如果解析失败，继续使用空摘要
+                    # 获取所有 AbstractText 元素（有些文章摘要分多段）
+                    abstract_texts = article_elem.findall(".//AbstractText")
+                    if abstract_texts:
+                        abstract_parts = []
+                        for abs_elem in abstract_texts:
+                            if abs_elem.text:
+                                abstract_parts.append(abs_elem.text)
+                        abstract = " ".join(abstract_parts)
+                        # 截取前200字（增加到200字）
+                        if len(abstract) > 200:
+                            abstract = abstract[:200] + "..."
+                        abstracts[pmid] = abstract
+        except Exception as e:
+            st.warning(f"摘要解析出错: {str(e)}")
+            pass
         
         # 解析结果
         articles = []
@@ -207,10 +214,11 @@ def summarize_with_ai(query: str, articles: List[Dict], api_key: str) -> str:
     return "❌ 多次重试失败，请稍后再试"
 
 # 主界面
-query = st.text_input(
+query = st.text_area(
     "🔍 输入您的医学问题",
-    placeholder="例如：2型糖尿病的一线用药是什么？",
-    help="用中文或英文描述您的问题"
+    placeholder="例如：2型糖尿病的一线用药是什么？\n\n也可以输入病例片段，AI会帮你找相关文献",
+    help="用中文或英文描述您的问题",
+    height=120
 )
 
 if st.button("🚀 开始检索", type="primary", use_container_width=True):
@@ -244,7 +252,8 @@ if st.button("🚀 开始检索", type="primary", use_container_width=True):
                 st.markdown("## 📚 相关文献")
                 
                 for i, article in enumerate(articles, 1):
-                    with st.expander(f"📄 {i}. {article['title']}", expanded=(i <= 3)):
+                    st.markdown(f"### 📄 {i}. {article['title']}")
+                    with st.expander("查看详情", expanded=(i <= 3)):
                         col1, col2 = st.columns([3, 1])
                     
                         with col1:
