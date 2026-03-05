@@ -47,6 +47,7 @@ st.markdown("""
     
     /* 输入框样式 */
     .stTextArea textarea {
+        background-color: #FAFAFA;
         border-radius: 8px;
         border: 2px solid #E3F2FD;
         padding: 12px;
