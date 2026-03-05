@@ -19,7 +19,146 @@ st.set_page_config(
 
 # 标题
 st.title("📚 文献科研助手（PubMed版）")
-st.markdown("**快速检索医学文献，AI 智能总结核心结论**")
+st.markdown('<p class="subtitle">快速检索医学文献，AI 智能总结核心结论</p>', unsafe_allow_html=True)
+
+
+# 自定义样式
+st.markdown("""
+<style>
+    /* 全局字体和间距优化 */
+    .main {
+        padding: 2rem 3rem;
+    }
+    
+    /* 标题样式 */
+    h1 {
+        color: #1565C0;
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* 副标题 */
+    .subtitle {
+        color: #546E7A;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    /* 输入框样式 */
+    .stTextArea textarea {
+        border-radius: 8px;
+        border: 2px solid #E3F2FD;
+        padding: 12px;
+        font-size: 1rem;
+    }
+    
+    .stTextArea textarea:focus {
+        border-color: #1E88E5;
+        box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.1);
+    }
+    
+    /* 按钮样式 */
+    .stButton button {
+        background-color: #1E88E5;
+        color: white;
+        border-radius: 8px;
+        padding: 0.6rem 2rem;
+        font-size: 1rem;
+        font-weight: 500;
+        border: none;
+        transition: all 0.3s;
+    }
+    
+    .stButton button:hover {
+        background-color: #1565C0;
+        box-shadow: 0 4px 12px rgba(30, 136, 229, 0.3);
+    }
+    
+    /* 文献卡片样式 */
+    .literature-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        border: 1px solid #E0E0E0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s;
+    }
+    
+    .literature-card:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        border-color: #1E88E5;
+    }
+    
+    .literature-title {
+        color: #1565C0;
+        font-size: 1.15rem;
+        font-weight: 600;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+    
+    .literature-meta {
+        color: #757575;
+        font-size: 0.9rem;
+        line-height: 1.8;
+        margin-bottom: 16px;
+    }
+    
+    .literature-abstract {
+        color: #424242;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 16px;
+        padding: 12px;
+        background: #F5F5F5;
+        border-radius: 6px;
+    }
+    
+    .literature-link {
+        color: #1E88E5;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .literature-link:hover {
+        color: #1565C0;
+        text-decoration: underline;
+    }
+    
+    /* 核心结论样式 */
+    .conclusion-box {
+        background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+        border-radius: 12px;
+        padding: 24px;
+        border-left: 4px solid #1E88E5;
+    }
+    
+    /* 侧边栏样式 */
+    .css-1d391kg {
+        background-color: #FAFAFA;
+    }
+    
+    /* 成功/警告提示优化 */
+    .stSuccess {
+        background-color: #E8F5E9;
+        color: #2E7D32;
+        border-radius: 8px;
+        padding: 12px;
+    }
+    
+    .stWarning {
+        background-color: #FFF3E0;
+        color: #E65100;
+        border-radius: 8px;
+        padding: 12px;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 
 # 侧边栏配置
 with st.sidebar:
