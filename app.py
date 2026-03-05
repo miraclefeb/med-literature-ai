@@ -18,7 +18,7 @@ st.set_page_config(
 )
 
 # 标题
-st.title("🔬 医学文献 AI 助手")
+st.title("📚 文献科研助手（PubMed版）")
 st.markdown("**快速检索医学文献，AI 智能总结核心结论**")
 
 # 侧边栏配置
