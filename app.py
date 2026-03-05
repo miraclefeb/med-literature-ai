@@ -96,6 +96,11 @@ st.markdown("""
         background-color: #F5F5F5;
         border-color: #999999;
     }
+    /* 三级标题 */
+    h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -352,12 +357,12 @@ if st.button("🚀 开始检索", type="primary", use_container_width=True):
             
             # 左侧：核心结论
             with col_left:
-                st.markdown("## 📊 核心结论")
+                st.markdown("### 📊 核心结论")
                 st.markdown(summary)
             
             # 右侧：文献列表
             with col_right:
-                st.markdown("## 📚 相关文献")
+                st.markdown("### 📚 相关文献")
                 
                 for i, article in enumerate(articles, 1):
                     with st.expander(f"📄 {i}. {article['title']}", expanded=(i <= 3)):
