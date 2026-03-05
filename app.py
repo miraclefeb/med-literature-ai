@@ -18,7 +18,7 @@ st.set_page_config(
 )
 
 # 标题
-st.title("📚 文献科研助手（PubMed版）")
+st.title("文献科研助手（PubMed版）")
 st.markdown("**快速检索医学文献，AI 智能总结核心结论**")
 
 
@@ -51,13 +51,20 @@ st.markdown("""
         background-color: #f7efe8;
     }
 
-    /* 滑块样式 */
+    /* 滑块样式 - 优化配色 */
+    /* 滑块轨道（未走的进度）*/
     .stSlider > div > div > div {
-        background-color: #f7efe8;
+        background-color: #f7efe8 !important;
     }
     
+    /* 滑块进度条（已走的进度）*/
     .stSlider > div > div > div > div {
-        background-color: #fe791b;
+        background-color: #fe791b !important;
+    }
+    
+    /* 滑块按钮 */
+    .stSlider > div > div > div > div > div {
+        background-color: #fe791b !important;
     }
     
     /* 输入框去掉边框 */
