@@ -32,7 +32,7 @@ st.markdown("""
     
     /* 按钮颜色 - 浅橙色 */
     .stButton button {
-        background-color: #FFB74D;
+        background-color: #fe791b;
         color: white;
         border: none;
         border-radius: 8px;
@@ -43,8 +43,12 @@ st.markdown("""
     }
     
     .stButton button:hover {
-        background-color: #FFA726;
+        background-color: #e66a15;
         box-shadow: 0 4px 12px rgba(255, 183, 77, 0.4);
+    }
+    /* 输入框背景色 */
+    .stTextArea textarea {
+        background-color: #f7efe8;
     }
 </style>
 """, unsafe_allow_html=True)
