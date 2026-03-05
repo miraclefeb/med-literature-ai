@@ -80,6 +80,22 @@ st.markdown("""
         outline: none;
         box-shadow: 0 0 0 2px rgba(254, 121, 27, 0.2);
     }
+
+    /* 示例问题按钮样式 */
+    div[data-testid="column"] button {
+        background-color: #FFFFFF;
+        color: #fe791b;
+        border: 2px solid #fe791b;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+    
+    div[data-testid="column"] button:hover {
+        background-color: #fe791b;
+        color: white;
+    }
 </style>
 """, unsafe_allow_html=True)
 
